@@ -62,7 +62,7 @@ private:
     //edges are between the map-key which is a nodeid and 
     //the map-value which is a list of nodeids with distance
     typedef pair<int, double> EdgeDistancePair;
-    typedef	map<int, list<EdgeDistancePair>> EdgeMap;
+    typedef map<int, list<EdgeDistancePair>> EdgeMap;
     EdgeMap m_edgeMap;
 
     //number of nodes in the graph

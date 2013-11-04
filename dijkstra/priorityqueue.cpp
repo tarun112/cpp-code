@@ -7,7 +7,7 @@
 
 //initialized with reference to graph & the nodeid vector
 PriorityQueue::PriorityQueue(Graph& graph, vector<int>& invec):
-    m_graph(graph),	m_vec(invec.begin(), invec.end()),
+    m_graph(graph), m_vec(invec.begin(), invec.end()),
     compare(CompareNodeDistance(graph))
 {	
     //using stl heap functions to arrange elements using priorities

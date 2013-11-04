@@ -34,7 +34,7 @@ private:
     vector<int> m_vec;
 
     //reference to graph
-    Graph& m_graph;
+    Graph &m_graph;
 
     //class required for comparision operator
     class CompareNodeDistance 

@@ -5,7 +5,7 @@
 
 int main()
 {
-	MonteCarlo montecarlo;
-	montecarlo.runTest();
-	return 0;
+    MonteCarlo montecarlo;
+    montecarlo.runTest();
+    return 0;
 }

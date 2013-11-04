@@ -44,7 +44,7 @@ int Graph::initialize(double edgedensity, pair<double,double> distancerange)
 
         //if both nodes are same than it is a loop, which is discarded in this case
         if (nodeid0 == nodeid1)
-	        continue;
+	    continue;
 
         //get a random distance within specified range
         double distance = distRangeDistribution(generator);
@@ -53,7 +53,7 @@ int Graph::initialize(double edgedensity, pair<double,double> distancerange)
         int res = 0;
         res = insertEdge(nodeid0, nodeid1, distance);
         if (res == e_EdgeAlreadyPresent)
-	        continue;
+	    continue;
 
         //since graph is undirectional, insert the edge between node1 & node0
         res = insertEdge(nodeid1, nodeid0, distance);

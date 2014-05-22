@@ -2,7 +2,7 @@
 *  -declares 'Player' abstract base class
 *  -declares 'PlayerHuman', 'PlayerComputer' derived  classes.
 *  -declares 'PlayerMgr' managing class.
-*  -This implements the Player inheritance and management.  It iterfaces with HexGame  
+*  -This implements the Player inheritance and management.  It iterfaces with HexUI  
 *     to accept & make player specific moves.
 */
 #ifndef _PLAYER___HPP_
@@ -13,7 +13,7 @@
 #include "playerenums.h"
 using namespace std;
 
-class HexGame;
+class HexUI;
 
 //abstract base class Player
 //it implements the mandatory methods for getting & setting info & color
@@ -26,7 +26,7 @@ public:
 
     virtual ~Player() { }; //virtual destructor
 
-    virtual int play(HexGame&) = 0; //abstract method
+    virtual int play(HexUI&) = 0; //abstract method
         
     const string& getInfo() { return m_info; } //get info
 
@@ -37,6 +37,7 @@ private:
     PlayerColor m_color;
 };
 
+//----------------------------------------------------------
 
 //class PlayerHuman is derived from class Player.
 //implements methods for human play
@@ -48,9 +49,10 @@ public:
     virtual ~PlayerHuman() override
     {}
 
-    virtual int play(HexGame&) override;
+    virtual int play(HexUI&) override;
 };
 
+//----------------------------------------------------------
 
 //class PlayerComputer is derived from class Player.
 //implements methods for computer play
@@ -62,15 +64,16 @@ public:
     virtual ~PlayerComputer() override
     {}
 
-    virtual int play(HexGame&) override;
+    virtual int play(HexUI&) override;
 };
 
+//----------------------------------------------------------
 
 //class PlayerMgr manages PLayerHuman & PlayerComputer objects
 class PlayerMgr {
 public:
-    PlayerMgr() : m_playerBlue(nullptr),m_playerRed(nullptr)
-    {}
+    PlayerMgr(const pair<PlayerType,string>& blueplayer, 
+              const pair<PlayerType,string>& redplayer);
 
     ~PlayerMgr() {
         delete m_playerBlue;
@@ -79,11 +82,16 @@ public:
         m_playerRed = nullptr;
     }
 
-    int createPlayerBlue( PlayerType type, const string& info);
     Player& getPlayerBlue() { return *m_playerBlue; }
-
-    int createPlayerRed( PlayerType type, const string& info);
     Player& getPlayerRed() { return *m_playerRed; }
+
+private:
+    int createPlayerBlue( const pair<PlayerType,string>& blueplayer );
+    int createPlayerRed( const pair<PlayerType,string>& redplayer );
+
+    PlayerMgr() = delete;
+    PlayerMgr(const PlayerMgr&) = delete;
+    PlayerMgr& operator=(const PlayerMgr&) = delete;
 
 private:
     Player* m_playerBlue;

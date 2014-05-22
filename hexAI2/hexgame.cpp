@@ -1,264 +1,124 @@
-/*
-*  -class HexGame implementation
-*  -prompts for input and print output using ascii chars on console
-*  -uses hex to mange board and moves
-*/
-#include <utility>
-#include <string>
+
 #include <iostream>
-#include <iomanip>
-#include <cassert>
+#include <string>
 #include <sstream>
-#include <cctype>
-#include <limits>
+#include "hexui.h"
 #include "player.h"
 #include "hexgame.h"
 
-using namespace std;
+//constants for limiting hex board size
+const int HEXSIZE_MIN = 3;
+const int HEXSIZE_MAX = 26;
 
-//input string to interrupt game
-const string GAME_INTERRUPT = "9999";
-
-//prompt for first player and print info about game
-int HexGame::initialize()
+//get the hex board size. Since all subsequent objects are initialized 
+//  with size, it is to be entered here.
+int HexGame::getHexSize(int& size)
 {
-    //print board and game playing information
-    cout << string(50, '-') << endl;
-    cout << "On Board:" << endl;
-    cout << endl;
-    cout << "-Blank position is '.'" << endl;
-    cout << endl;
-    cout << "-" << m_playerBlue.getInfo() << " piece is 'X'" << endl;; 
-    cout << "\tconnects West-East, moves 1st"<< endl; 
-    cout << endl;
-    cout << "-" << m_playerRed.getInfo() << " piece is 'O'" << endl;; 
-    cout << "\tconnects North-South"<< endl; 
-    cout << endl;
-    cout << "-Input moves as for example 'c6'" << endl;
-    cout << endl;
-    cout << "-To interrupt game input '9999'" << endl;
-    cout << string(50, '-') << endl;
-    cout << "Press Enter to continue";
-    cin.ignore(std::numeric_limits<streamsize>::max(),'\n');
-    cin.ignore(std::numeric_limits<streamsize>::max(),'\n');
+    string strinput;
 
-    return StatEnum::OK;
+    //size less than 3 is trivial case(first player wins) 
+    //size greater than 26 is limited by how moves are entered (e.g. 'c14' etc. [a-z] 26 alphabets).
+    cout << endl;
+    cout << string(30, '-') << endl;
+    cout << "Input Hex game size between "<< HEXSIZE_MIN << 
+        " and " << HEXSIZE_MAX << " : ";
+    cin >> strinput;
+
+    //take input as string and extract int from it to prevent infinite loops
+    stringstream ss;
+    ss << strinput;
+    int intval = 0;
+    ss >> intval;
+
+    if (intval < HEXSIZE_MIN || intval > HEXSIZE_MAX)
+    {
+        cout << endl;
+        cout << "** Invalid size.  Input size between "<< HEXSIZE_MIN << 
+            " and " << HEXSIZE_MAX << " **" <<  endl;
+        int res = getHexSize(size); //if invalid input prompt again
+        return res;
+    }
+    size = intval;
+
+    return 0;
 }
 
-//draw board after a move
-int HexGame::drawMove(PlayerColor player)
+//prompt and take input for game type.(player human or computer)
+int HexGame::getGamePlayers( pair<PlayerType, string>& blueplayer, 
+                        pair<PlayerType, string>& redplayer) 
 {
-    //print information about current state and previous move
-    cout << string(50, '\n');
-    cout << string(50, '-') << endl;
-    cout << "Board (after move " << m_moveNumber << ")" << endl;
-    if (PlayerColor::BLUE == player )
-        cout << "Previous move: " << m_playerBlue.getInfo() << " - " << m_previousMove << endl;
-    else if (PlayerColor::RED == player )
-        cout << "Previous move: " << m_playerRed.getInfo() << " - " << m_previousMove << endl;
-    else
-        cout << "Previous move: None" << endl;
-    cout << string(20, '-') << endl;
     cout << endl;
-
-    m_hex.drawBoard();  //call hex to draw move
+    cout << string(30, '-') << endl;
+    cout << "To play Human vs Human enter 1." << endl;
+    cout << "To play Human vs Computer enter 2." << endl;
+    cout << "To play Computer vs Computer enter 3." << endl;
+    cout << "Imput players option : ";
+    string strinput;
+    cin >> strinput;
     
-    cout << endl << endl;
-    cout << string(50, '-') << endl;
-    return StatEnum::OK;
+    stringstream ss;
+    ss << strinput;
+    int option = 0;
+    ss >> option;
+
+    if (option == 1 ) {
+        blueplayer.first = PlayerType::HUMAN;
+        blueplayer.second = "Player One Human 'Blue'(X)";
+        redplayer.first = PlayerType::HUMAN;
+        redplayer.second = "Player Two Human 'Red'(O)";
+        return 0;
+    }
+    else if (option == 2 ) {
+        char input = 'y';
+        cout << string(50, '\n');
+        cout << string(50, '-') << endl;
+        cout << "Would you like to play first as 'Blue' (y/n): ";
+        cin >> input;
+        cout << endl;
+        cout << string(50, '-') << endl;
+        if (input == 'y' || input == 'Y') {
+            blueplayer.first = PlayerType::HUMAN;
+            blueplayer.second = "Player One Human 'Blue'(X)";
+            redplayer.first = PlayerType::COMP;
+            redplayer.second = "Player Two Computer 'Red'(O)";
+            return 0;
+        } else {
+            blueplayer.first = PlayerType::COMP;
+            blueplayer.second = "Player One Computer 'Blue'(X)";
+            redplayer.first = PlayerType::HUMAN;
+            redplayer.second = "Player Two Human 'Red'(O)";
+            return 0;
+        }
+    }
+    else if (option == 3) {
+        blueplayer.first = PlayerType::COMP;
+        blueplayer.second = "Player One Computer 'Blue'(X)";
+        redplayer.first = PlayerType::COMP;
+        redplayer.second = "Player Two Computer 'Red'(O)";
+        return 0;
+    } else {
+        cout << endl;
+        cout << "** Incorrect players option. Try again **" << endl;
+        return getGamePlayers(blueplayer, redplayer);  //if invalid input prompt again
+    }
 }
 
-inline Player* HexGame::getOtherPlayer(Player* player) 
-{
-    if(PlayerColor::BLUE == player->getColor()) 
-        return &m_playerRed;
-    else if(PlayerColor::RED == player->getColor()) 
-        return &m_playerBlue;
-    return nullptr;
-}
-
-//start hex game
 int HexGame::play()
 {
-    m_hex.initialize();  //initalize hex object
+    int size;
+    getHexSize(size);
 
-    initialize();  //initialize hexboard 
+    pair<PlayerType, string> blueplayer;
+    pair<PlayerType, string> redplayer;
+    int res = getGamePlayers(blueplayer, redplayer);
 
-    drawMove(PlayerColor::BLANK);  //draw blank board
+    PlayerMgr playermgr(blueplayer, redplayer);
 
-    int gamestat = StatEnum::OK;
-    Player* curplayer = &m_playerBlue;
-
-    //game loop.  keep asking for move till game ends.
-    while (gamestat == StatEnum::OK)
-    {
-        m_moveNumber++;
-        gamestat = curplayer->play(*this);
-        curplayer = getOtherPlayer(curplayer);
-        //check for nullptr
-    }
-
-    return StatEnum::OK;
-}
-
-//play for given player
-int HexGame::play(PlayerColor player)
-{
-    //get move for player as hex-position
-    pair<int,int> position;
-    int res = getMove(player, position);
-    if (StatEnum::INTERRUPT == res)
-        return res;
-
-    //get move in printable form 
-    m_previousMove =  getMoveFromPosition(position);
-
-    //place move on board 
-    res = makeMove(player, position);
-    return res;
-}
-
-//compute move for given player
-int HexGame::playComputer(PlayerColor player)
-{
-    //print computing move message
-    if (player == PlayerColor::BLUE)
-        cout << endl << m_playerBlue.getInfo() << " computing... ";
-    else if (player == PlayerColor::RED)
-        cout << endl << m_playerRed.getInfo() << " computing... ";
-    else
-        assert(false);
-
-    //compute move and get it as hex-position
-    pair<int,int> position;
-    int res = m_hex.getComputerMove(player, position);
-    if (StatEnum::INTERRUPT == res)
-        return res;
-
-    //get move in printable form 
-    m_previousMove =  getMoveFromPosition(position);
-
-    //place move on board 
-    res = makeMove(player, position);
-    return res;
-}
-
-//check if move is within hex-board bounds
-bool HexGame::isMoveOnBoard(pair<int,int> position)
-{
-    int ipos = position.first;
-    int jpos = position.second;
-    if ((ipos < 0 || ipos >= m_size) || (jpos < 0 || jpos >= m_size) )
-        return false;
-    return true;
-}
-
-//prompt for player input and check if input is correct
-int HexGame::getMove(PlayerColor player, pair<int,int>& position)
-{
-
-    //prompt for player move
-    if (player == PlayerColor::BLUE)
-        cout << endl << m_playerBlue.getInfo() << " turn : ";
-    else if (player == PlayerColor::RED)
-        cout << endl << m_playerRed.getInfo() << " turn : ";
-    else
-        assert(false);
-
-    //get input in string
-    string input;
-    cin >> input ;
-
-    //chcek for game interupt and return interrupt status
-    if ( input.compare(GAME_INTERRUPT) == 0 )
-    {
-        cout << endl << "** Game interrupted **" << endl;
-        cout << string(50,'-') << endl;
-        cout << "Press Enter to continue";
-        cin.ignore(std::numeric_limits<streamsize>::max(),'\n');
-        cin.ignore(std::numeric_limits<streamsize>::max(),'\n');
-        return StatEnum::INTERRUPT;
-    }
-
-    //convert the input to hex-position
-    char icoord;
-    int jcoord; 
-    stringstream(input.substr(0,1)) >> icoord;
-    stringstream(input.substr(1)) >> jcoord;
-    position.first = toupper(static_cast<int>(icoord)) - static_cast<int>('A');
-    position.second = jcoord - 1;
-   
-    //check move hex-position.  if not valid print message and prompt 
-    //  for another move
-    if (! isMoveOnBoard(position))
-    {
-        cout << "Invalid move. Position not on Board" << endl;
-        int res = getMove(player, position);
-        return res;
-    }
-
-    return StatEnum::OK;
-}
-
-//check and place move on board.  check for winner.
-int HexGame::makeMove(PlayerColor player, pair<int,int> position)
-{
-    //check and place positon on board for player
-    int res = m_hex.setPositionStatus(position.first, position.second, player);
-    if (res == StatEnum::POS_OCCUPIED)
-    {
-        cout << "Invalid move. Position on Board occupied." << endl;
-        res = play(player);
-        return res;
-    }
-
-    drawMove(player);  //draw board
-
-    //check if any winnner
-    PlayerColor winner = PlayerColor::BLANK;
-    res = m_hex.checkForWinner(winner);
-    if (res == StatEnum::WINNER )
-    {
-        cout << endl << string(50,'-') << endl;
-        cout << "** Game Ends **" << endl;
-        cout << "Winner is: ";
-        if (PlayerColor::BLUE == winner)
-            cout << m_playerBlue.getInfo() << endl;
-        else if (PlayerColor::RED == winner)
-            cout << m_playerRed.getInfo() << endl;
-        else
-            assert(false);
-        cout << string(50,'-') << endl;
-        cout << "Press Enter to continue";
-        cin.ignore(std::numeric_limits<streamsize>::max(),'\n');
-
-        return StatEnum::WINNER;
-    }
-
-    //check if board is completly filled and no winner.
-    //By rules of hex this will never happen.
-    if (m_moveNumber == m_size * m_size)
-    {
-        cout << endl << string(50,'-') << endl;
-        cout << "** Game Ends **" << endl;
-        cout << "Game is a Tie. No more possible moves." << endl;
-        cout << string(50,'-') << endl;
-        cout << "Press Enter to continue";
-        cin.ignore(std::numeric_limits<streamsize>::max(),'\n');
-        cin.ignore(std::numeric_limits<streamsize>::max(),'\n');
-
-        return StatEnum::BOARDFULL;
-    }
+    pair<Player&,Player&> players = 
+        pair<Player&,Player&>(playermgr.getPlayerBlue(), playermgr.getPlayerRed());
     
-    return StatEnum::OK;
-}
+    HexUI hexui(size, players);  //hexui object initialized with board size
+    hexui.play();  //play the game
 
-//for given position return printable move
-string HexGame::getMoveFromPosition(pair<int,int> position)
-{
-    char ichar = static_cast<char>(position.first + static_cast<int>('a'));
-    string movestr;
-    movestr += ichar;  //concat
-    movestr += to_string(position.second + 1);
-    return movestr;
+    return 0;
 }

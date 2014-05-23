@@ -82,8 +82,8 @@ public:
         m_playerRed = nullptr;
     }
 
-    Player& getPlayerBlue() { return *m_playerBlue; }
-    Player& getPlayerRed() { return *m_playerRed; }
+    Player& getPlayerBlue() const { return *m_playerBlue; }
+    Player& getPlayerRed() const { return *m_playerRed; }
 
 private:
     int createPlayerBlue( const pair<PlayerType,string>& blueplayer );

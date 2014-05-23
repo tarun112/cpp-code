@@ -7,7 +7,7 @@
 
 int main() 
 {
-    HexGame hexgame;
+    HexGame hexgame;    
     int res = hexgame.play();
 
     return 0;

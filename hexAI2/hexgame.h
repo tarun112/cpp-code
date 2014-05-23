@@ -1,7 +1,13 @@
+/*
+*  -hexgame.h
+*  -get game size and type(players human or computer) and start games
+*/
 #ifndef _HEXGAME__H_
 #define _HEXGAME__H_
 
-#include "player.h"
+#include <string>
+#include "playerenums.h"
+using namespace std;
 
 class HexGame 
 {

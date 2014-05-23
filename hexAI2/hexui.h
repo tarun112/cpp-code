@@ -14,11 +14,11 @@ class HexUI
 {
 public:
     //constructor initialized with hex-size(side-length) and Hex object
-    HexUI(int size, pair<Player&,Player&> gameplayers):
+    HexUI(int size, Player& blueplayer, Player& redplayer):
         m_size(size), m_hex(size), // m_gamePlayers(gameplayers),
         m_moveNumber(0), m_previousMove(""),
-        m_playerBlue(gameplayers.first),
-        m_playerRed(gameplayers.second)
+        m_playerBlue(blueplayer),
+        m_playerRed(redplayer)
     {}
 
     inline Player* getOtherPlayer(Player* player);

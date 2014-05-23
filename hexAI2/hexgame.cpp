@@ -1,4 +1,7 @@
-
+/*
+*  -hexgame.cpp
+*  -get game size and type(players human or computer) and start games
+*/
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -108,16 +111,15 @@ int HexGame::play()
     int size;
     getHexSize(size);
 
-    pair<PlayerType, string> blueplayer;
-    pair<PlayerType, string> redplayer;
-    int res = getGamePlayers(blueplayer, redplayer);
+    pair<PlayerType, string> blueinfo;
+    pair<PlayerType, string> redinfo;
+    int res = getGamePlayers(blueinfo, redinfo);
 
-    PlayerMgr playermgr(blueplayer, redplayer);
-
-    pair<Player&,Player&> players = 
-        pair<Player&,Player&>(playermgr.getPlayerBlue(), playermgr.getPlayerRed());
+    PlayerMgr playermgr(blueinfo, redinfo);
     
-    HexUI hexui(size, players);  //hexui object initialized with board size
+    Player& blueplayer = playermgr.getPlayerBlue(); 
+    Player& redplayer = playermgr.getPlayerRed(); 
+    HexUI hexui(size, blueplayer, redplayer);  //hexui object initialized with board size
     hexui.play();  //play the game
 
     return 0;

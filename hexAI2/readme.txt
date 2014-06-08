@@ -18,7 +18,7 @@ The code is edited, compiled & built on Visual Studio Express 2013
 
 The various modules & classes are as follows:
 
-Player:  base class for player information & move
+Player (player.h, .cpp):  base class for player information & move
 PlayerHuman, PlayerCompuer: derived classes used for making moves polymorphically.  interfaces with HexUI
 playerMgr: noncopyable, creates & manages player objects. interfaces with HexGame
 

@@ -1,0 +1,29 @@
+
+#notes
+-source is in c++/ STL
+-executable is created using Microsoft Visual Studio Community 2015 RC
+
+-jsoncpp is used to parse JSON file and is used as source contained in folder 'json/' 
+-all entities are derived from base class 'Entity'.  And the entity map is as follows:
+
+-Entities
+---Vertex
+---Edge
+-----LineSegment
+-----CircularArc
+
+-class 'EntityManager' is a singleton class.  It creates, manages and deletes all entities.
+-entities are identified with integer id 'EntityId'.  
+-'EntityId' can be used to obtain reference to 'Entity' objects from 'EntityManager'
+
+
+-To get 'material cost' minimum area bounding box is used(MABB).
+-MABB is obtained using 'rotating calipers' method on convex hull.
+-for convex hull of a circular arc:
+--cut arc does not contributes any points to convex hull.
+--extruded arc hull points are approximated using circumscribing polygon points and added to points for convex hull computation
+
+
+#assumptions
+-edges are always from start to end vertex.  This is to get circular arc cut or extrude type.
+

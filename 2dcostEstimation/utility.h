@@ -2,7 +2,7 @@
 
 #include "entity.h"
 
-namespace 2DEstimate {
+namespace Estimate {
 
 	double getDistance(const Vertex& vrtx0, const Vertex& vrtx1);
 	double getDistance(EntityId vrtxid0, EntityId vrtxid1);

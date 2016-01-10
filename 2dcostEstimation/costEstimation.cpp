@@ -9,7 +9,7 @@ using namespace std;
 #include "compute.h"
 #include "costEstimation.h"
 
-namespace 2DEstimate {
+namespace Estimate {
 
 	int CostEstimation::initialize() {	
 		EntityManager::initialize();

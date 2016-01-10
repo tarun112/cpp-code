@@ -3,7 +3,7 @@
 #include <string>
 using namespace std;
 
-namespace 2DEstimate {
+namespace Estimate {
 
 	class CostEstimation {
 	public:

@@ -14,7 +14,7 @@ int main(int argc, const char* argv[]) {
 		return 0;
 	}
 
-	2DEstimate::CostEstimation estimate;
+	Estimate::CostEstimation estimate;
 
 	int stat = 0;
 	stat = estimate.initialize();

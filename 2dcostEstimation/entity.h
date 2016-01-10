@@ -7,7 +7,7 @@ using namespace std;
 //all entities are derived from Entity
 //entities are created and managed by EntityManager
 //entities are identified by EntityId and can be obtained from EntityManager using it
-namespace 2DEstimate {
+namespace Estimate {
 	
 	typedef long EntityId;
 

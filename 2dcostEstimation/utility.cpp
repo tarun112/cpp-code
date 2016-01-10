@@ -5,7 +5,7 @@ using namespace std;
 #include "entityManager.h"
 #include "utility.h"
 
-namespace 2DEstimate {
+namespace Estimate {
 
 	double getDistance(const Vertex& vrtx0, const Vertex& vrtx1) {
 		pair<double, double> pnt0 = vrtx0.getPoint();

@@ -1,7 +1,7 @@
 #include "entity.h"
 #include "entityManager.h"
 
-namespace 2DEstimate {
+namespace Estimate {
 
 	EntityManager EntityManager::m_entityManager;
 

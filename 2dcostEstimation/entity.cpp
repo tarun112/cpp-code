@@ -8,7 +8,7 @@ using namespace std;
 #include "entityManager.h"
 #include "utility.h"
 
-namespace 2DEstimate {
+namespace Estimate {
 
 	double LineSegment::getLength() {
 		return getDistance(getStart(), getEnd());

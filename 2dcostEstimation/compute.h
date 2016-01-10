@@ -1,5 +1,5 @@
 #pragma once
-namespace 2DEstimate {
+namespace Estimate {
 
 	class Calculations {
 	public:

@@ -5,7 +5,7 @@ using namespace std;
 
 #include "entity.h"
 
-namespace 2DEstimate {
+namespace Estimate {
 
 	//Part is root entity containing 
 	//counter clockwise oriented list of all edges

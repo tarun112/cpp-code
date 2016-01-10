@@ -8,7 +8,7 @@ using namespace std;
 #include "compute.h"
 #include "utility.h"
 
-namespace 2DEstimate {
+namespace Estimate {
 
 
 	int Calculations::convexHull(const Part& part) {

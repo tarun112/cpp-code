@@ -1,6 +1,6 @@
 #pragma once
 
-namespace 2DEstimate {
+namespace Estimate {
 	//given values for cost estimation
 	const double VMAX = 0.5;
 	const double MCOST = 0.75; //material cost
